@@ -1,6 +1,7 @@
 class ItemsController < ApplicationController
-  before_action :authenticate_user!, only:[:new, :edit]
-  before_action :set_item, only: [:show, :edit, :update ]
+  before_action :authenticate_user!, except: [:index, :show]
+  before_action :set_item, only: [:show, :edit, :update, :destroy]
+  before_action :redirect_to_root, only: [:edit, :update, :destroy]
 
   def index
     @items = Item.all.order("created_at DESC")
@@ -29,10 +30,18 @@ class ItemsController < ApplicationController
 
   def update
     # @item = Item.find(params[:id])  DRY思想によりまとめてset_itemに記述 before_actionで実行させる
-    if @item.save
+    if @item.update(item_params)
       redirect_to item_path
     else
       render :edit
+    end
+  end
+
+  def destroy
+    if @item.destroy
+      redirect_to root_path
+    else
+      render :show
     end
   end
 
@@ -46,6 +55,10 @@ class ItemsController < ApplicationController
 
   def set_item
     @item = Item.find(params[:id])
+  end
+
+  def redirect_to_root
+    redirect_to root_path unless user_signed_in? && current_user.id == @item.user_id
   end
 
 end
