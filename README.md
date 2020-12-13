@@ -85,6 +85,9 @@ Things you may want to cover:
 - belongs_to :user
 - has_one :shipping_address
 
+      t.references :user,        null: false,  foreign_key: true
+      t.references :item,        null: false,  foreign_key: true
+
 ## shipping_address テーブル
 
 | Column          | Type       | Options                        |
@@ -98,3 +101,11 @@ Things you may want to cover:
 | purchase_record | references | null: false, foreign_key: true |
 
 - belongs_to :purchase_record
+
+      t.string     :postal_code,        null: false
+      t.integer    :prefecture_id,      null: false
+      t.string     :city,               null: false
+      t.string     :street,             null: false
+      t.string     :building,           null: false
+      t.string     :phone,              null: false
+      t.references :purchase_record,    foreign_key: true 
